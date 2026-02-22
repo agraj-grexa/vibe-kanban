@@ -36,6 +36,27 @@ impl NotificationService {
         }
 
         Self::send_telegram_notification(title, message).await;
+        Self::send_discord_notification(title, message).await;
+    }
+
+    /// Send a Discord notification if DISCORD_WEBHOOK_URL is set
+    async fn send_discord_notification(title: &str, message: &str) {
+        let webhook_url = match std::env::var("DISCORD_WEBHOOK_URL") {
+            Ok(u) => u,
+            Err(_) => return,
+        };
+
+        let content = format!("**{}**\n{}", title, message);
+
+        let client = reqwest::Client::new();
+        if let Err(e) = client
+            .post(&webhook_url)
+            .json(&serde_json::json!({ "content": content }))
+            .send()
+            .await
+        {
+            tracing::warn!("Failed to send Discord notification: {}", e);
+        }
     }
 
     /// Send a Telegram notification if TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID are set
