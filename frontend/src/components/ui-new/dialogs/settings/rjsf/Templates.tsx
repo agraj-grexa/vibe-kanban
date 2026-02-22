@@ -31,7 +31,7 @@ export const FieldTemplate = (props: FieldTemplateProps) => {
       <div className="space-y-1">
         {label && (
           <div className="text-sm font-medium text-normal">
-            {toPrettyCase(label)}
+            {schema.title ?? toPrettyCase(label)}
             {required && <span className="text-error ml-1">*</span>}
           </div>
         )}
