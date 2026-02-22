@@ -53,14 +53,6 @@
         "null"
       ]
     },
-    "use_bedrock": {
-      "title": "Use AWS Bedrock",
-      "description": "Route API calls through AWS Bedrock using your AWS_BEARER_TOKEN_BEDROCK. Set to true and select a Bedrock model below.",
-      "type": [
-        "boolean",
-        "null"
-      ]
-    },
     "base_command_override": {
       "title": "Base Command Override",
       "description": "Override the base command with a custom command",

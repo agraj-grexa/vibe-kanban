@@ -119,10 +119,6 @@ pub struct ClaudeCode {
     pub dangerously_skip_permissions: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub disable_api_key: Option<bool>,
-    /// Route API calls through AWS Bedrock instead of the Anthropic API.
-    /// Requires AWS credentials via env vars or ~/.aws/credentials.
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub use_bedrock: Option<bool>,
     #[serde(flatten)]
     pub cmd: CmdOverrides,
 
@@ -615,11 +611,6 @@ impl ClaudeCode {
         // a nested session and refuse to start.
         command.env_remove("CLAUDECODE");
 
-        // Inject AWS Bedrock env vars when use_bedrock is enabled
-        if self.use_bedrock.unwrap_or(false) {
-            command.env("CLAUDE_CODE_USE_BEDROCK", "1");
-            tracing::info!("AWS Bedrock mode enabled");
-        }
 
         // Remove ANTHROPIC_API_KEY if disable_api_key is enabled
         if self.disable_api_key.unwrap_or(false) {
