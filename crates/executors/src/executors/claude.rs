@@ -246,26 +246,30 @@ fn default_discovered_options() -> crate::executor_discovery::ExecutorDiscovered
                 ("claude-opus-4-6[1m]", "Opus (1M context)"),
                 ("claude-haiku-4-5-20251001", "Haiku"),
                 ("claude-sonnet-4-5-20250929", "Sonnet"),
-                // AWS Bedrock cross-region inference profile IDs
+                // AWS Bedrock model IDs
                 (
-                    "us.anthropic.claude-opus-4-5-20251101-v1:0",
-                    "Opus 4.5 (Bedrock)",
-                ),
-                (
-                    "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
-                    "Sonnet 4.5 (Bedrock)",
-                ),
-                (
-                    "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+                    "anthropic.claude-haiku-4-5-20251001-v1:0",
                     "Haiku 4.5 (Bedrock)",
                 ),
                 (
-                    "us.anthropic.claude-opus-4-20250514-v1:0",
-                    "Opus 4 (Bedrock)",
+                    "anthropic.claude-sonnet-4-6",
+                    "Sonnet 4.6 (Bedrock)",
                 ),
                 (
-                    "us.anthropic.claude-sonnet-4-20250514-v1:0",
-                    "Sonnet 4 (Bedrock)",
+                    "anthropic.claude-opus-4-6-v1",
+                    "Opus 4.6 (Bedrock)",
+                ),
+                (
+                    "anthropic.claude-sonnet-4-5-20250929-v1:0",
+                    "Sonnet 4.5 (Bedrock)",
+                ),
+                (
+                    "anthropic.claude-opus-4-1-20250805-v1:0",
+                    "Opus 4.1 (Bedrock)",
+                ),
+                (
+                    "anthropic.claude-opus-4-5-20251101-v1:0",
+                    "Opus 4.5 (Bedrock)",
                 ),
             ]
             .into_iter()
