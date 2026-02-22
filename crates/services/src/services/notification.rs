@@ -34,6 +34,58 @@ impl NotificationService {
         if config.push_enabled {
             Self::send_push_notification(title, message).await;
         }
+
+        Self::send_telegram_notification(title, message).await;
+        Self::send_discord_notification(title, message).await;
+    }
+
+    /// Send a Discord notification if DISCORD_WEBHOOK_URL is set
+    async fn send_discord_notification(title: &str, message: &str) {
+        let webhook_url = match std::env::var("DISCORD_WEBHOOK_URL") {
+            Ok(u) => u,
+            Err(_) => return,
+        };
+
+        let content = format!("**{}**\n{}", title, message);
+
+        let client = reqwest::Client::new();
+        if let Err(e) = client
+            .post(&webhook_url)
+            .json(&serde_json::json!({ "content": content }))
+            .send()
+            .await
+        {
+            tracing::warn!("Failed to send Discord notification: {}", e);
+        }
+    }
+
+    /// Send a Telegram notification if TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID are set
+    async fn send_telegram_notification(title: &str, message: &str) {
+        let bot_token = match std::env::var("TELEGRAM_BOT_TOKEN") {
+            Ok(t) => t,
+            Err(_) => return,
+        };
+        let chat_id = match std::env::var("TELEGRAM_CHAT_ID") {
+            Ok(c) => c,
+            Err(_) => return,
+        };
+
+        let text = format!("*{}*\n{}", title, message);
+        let url = format!("https://api.telegram.org/bot{}/sendMessage", bot_token);
+
+        let client = reqwest::Client::new();
+        if let Err(e) = client
+            .post(&url)
+            .json(&serde_json::json!({
+                "chat_id": chat_id,
+                "text": text,
+                "parse_mode": "Markdown"
+            }))
+            .send()
+            .await
+        {
+            tracing::warn!("Failed to send Telegram notification: {}", e);
+        }
     }
 
     /// Play a system sound notification across platforms
