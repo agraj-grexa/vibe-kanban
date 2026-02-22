@@ -611,9 +611,6 @@ impl ClaudeCode {
             .with_profile(&self.cmd)
             .apply_to_command(&mut command);
 
-        // Unset CLAUDECODE so the spawned claude-code process doesn't detect
-        // a nested session and refuse to start.
-        command.env_remove("CLAUDECODE");
 
 
         // Remove ANTHROPIC_API_KEY if disable_api_key is enabled
