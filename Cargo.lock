@@ -7434,6 +7434,8 @@ dependencies = [
  "git",
  "git-host",
  "git2",
+ "hex",
+ "hmac",
  "local-deployment",
  "mime_guess",
  "os_info",

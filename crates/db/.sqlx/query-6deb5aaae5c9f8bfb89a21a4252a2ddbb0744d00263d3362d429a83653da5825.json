@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT m.workspace_id as \"workspace_id!: Uuid\"\n               FROM merges m\n               INNER JOIN repos r ON r.id = m.repo_id\n               WHERE m.merge_type = 'pr'\n                 AND m.pr_number = $1\n                 AND r.name = $2\n                 AND m.pr_status = 'open'\n               ORDER BY m.created_at DESC\n               LIMIT 1",
+  "describe": {
+    "columns": [
+      {
+        "name": "workspace_id!: Uuid",
+        "ordinal": 0,
+        "type_info": "Blob"
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "6deb5aaae5c9f8bfb89a21a4252a2ddbb0744d00263d3362d429a83653da5825"
+}

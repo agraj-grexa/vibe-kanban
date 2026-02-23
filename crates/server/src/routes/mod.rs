@@ -9,11 +9,11 @@ use crate::{DeploymentImpl, middleware};
 pub mod approvals;
 pub mod config;
 pub mod containers;
-pub mod filesystem;
-// pub mod github;
 pub mod events;
 pub mod execution_processes;
+pub mod filesystem;
 pub mod frontend;
+pub mod github;
 pub mod health;
 pub mod images;
 pub mod migration;
@@ -29,6 +29,8 @@ pub mod task_attempts;
 pub mod terminal;
 
 pub fn router(deployment: DeploymentImpl) -> IntoMakeService<Router> {
+    let webhook_routes = github::router().with_state(deployment.clone());
+
     // Create routers with different middleware layers
     let base_routes = Router::new()
         .route("/health", get(health::health_check))
@@ -59,5 +61,6 @@ pub fn router(deployment: DeploymentImpl) -> IntoMakeService<Router> {
         .route("/", get(frontend::serve_frontend_root))
         .route("/{*path}", get(frontend::serve_frontend))
         .nest("/api", base_routes)
+        .nest("/api", webhook_routes)
         .into_make_service()
 }

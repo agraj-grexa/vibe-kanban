@@ -380,6 +380,30 @@ impl Merge {
             })
             .collect())
     }
+
+    /// Find the workspace_id for the most recently created open PR matching pr_number + repo name.
+    /// Used by the GitHub webhook handler to route incoming events to the right workspace.
+    pub async fn find_workspace_by_pr_number_and_repo_name(
+        pool: &SqlitePool,
+        pr_number: i64,
+        repo_name: &str,
+    ) -> Result<Option<Uuid>, sqlx::Error> {
+        sqlx::query_scalar!(
+            r#"SELECT m.workspace_id as "workspace_id!: Uuid"
+               FROM merges m
+               INNER JOIN repos r ON r.id = m.repo_id
+               WHERE m.merge_type = 'pr'
+                 AND m.pr_number = $1
+                 AND r.name = $2
+                 AND m.pr_status = 'open'
+               ORDER BY m.created_at DESC
+               LIMIT 1"#,
+            pr_number,
+            repo_name
+        )
+        .fetch_optional(pool)
+        .await
+    }
 }
 
 // Conversion implementations
